@@ -22,4 +22,8 @@ In mongo shell --->  mongod - Is to launch the mongosh
                      db.createCollection("name")  -   To create collection 
 
                      show collections  -  To see collections available in that db
-                     show collections  -  
+
+                     db.collection_name.insertOne({...enter the datas here....});  - to insert one  or we can store it in a variable and ....insertOne(variable);
+                     
+                     db.collection_name.insertMany([{...},{...},{....},etc...]);  - to insert Many  Or store this array into a variable 
+                     
