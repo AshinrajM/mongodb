@@ -1,0 +1,25 @@
+Mongodb   -    It is a open source , cross platform document database.It works on the concept of collection and document.Mongo uses javascript engine
+
+  -->  Collection -  Collection is a group of MongoDB documents. It is the equivalent of an RDBMS table. Collections doesnt enforce schema.
+
+  -->  Document   -  Document is a set of key-value pairs. Document have dynamic schema (dynamic schema means documents in same collection dont need to have same set of fields
+                     or structure) also common fields in a collection document may hold different types of data.
+
+
+
+data formats used in Mongodb  -  JSON  ,  BSON(Binary JSON)  ,  EXTENDED JSON (*BSON fomrat is used to store datas in mongodb , Extended json is used to convert BSON to human readable)
+
+In mongo shell --->  mongod - Is to launch the mongosh
+                     db.version() -  To see the version of db
+                     show dbs    -  There will be 3 default dbs(admin,local,config -- DOnt use this db's for store data)
+                     use admin   -  To choose admin db(choose which ever we need
+                         -----  
+
+                     db.stats()  -  To see the status of db
+
+                     use newdb  - Before creating a collection has to be inside a db
+
+                     db.createCollection("name")  -   To create collection 
+
+                     show collections  -  To see collections available in that db
+                     show collections  -  
