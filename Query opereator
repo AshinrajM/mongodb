@@ -1,0 +1,100 @@
+*   Find Objects
+    # impicit and operator (both field are same it override the first field)
+        db.getCollection(collectionName).find({
+            "age": 28,
+            "section": "IT"
+        })
+
+*   Comparison Operators
+
+    # equal
+        .find({
+            "age": {$eq: 20}
+        })
+    # not equal
+        .find({
+            "age": {$ne: 18}
+        })
+    # greater than
+        .find({
+            "age": {$gt: 18}
+        })
+    # less than
+        .find({
+            "age": {$lt: 30}
+        })
+    # both greater than and less than
+        .find({
+            "age": {$gt: 18, $lt: 25}
+        })
+    # filter data in perticular condition
+        .find({
+            "age": {$in: [23, 25]}
+        })
+    # filter data is not present in perticular condition 
+        .find({
+            "age": {$nin: [23, 25]}
+        })
+    # Explicit and operator
+        .find({
+            $and: [
+                {age: {$gt: 20}}, {age: {$lte: 30}}
+            ]
+        })
+    # Or operator
+        .find({
+            $or: [
+                {age: {$lt: 25}, {salary: {$gt: 15000}}}
+            ]
+        })
+
+    Query in array
+    # tags : []
+        .find({
+            "tags.0": " "
+        })
+        0: index position, 
+    # $all
+    # $size
+
+    Element Operators
+    # exists operator to check if the field is exist or not 
+
+        {tags: {$exists: true}} - return Objects if it contains tags field
+        {name: {$exists: false}} - return Objects which is not contains name field
+
+
+    Filter from collection Objects
+    # fetch name and age from Objects
+        .find(
+            {}, 
+            {name: 1, age: 1}
+        )
+        (if the value is 1 it will include the field)
+        (if you want to exclude _id field, mention _id: 0)
+        (if you want to show the field whichone present in nested object { object.field: 1 or 0 })
+        .find(
+            {},
+            {name: 0, age: 0}
+        )
+        (this will give the result of all Objects except name and age field)
+
+    Regex
+    # regular expression using name
+        .find({
+            name: {
+                $regex: /pattern/options - we can also write another method
+                $regex: /pattern/, $options: "i"
+            }
+        })
+        (pattern : like a part of name /ark/, /pov/, or pure regular expression like /^ad$/)
+        (options : i means incase sensitive both upper case and lower case will condider)
+
+    # find count
+        query.count()
+        .find({
+            "age": {$gt: 18, $lt: 25}
+        }).count()
+    # sort the data
+        query.sort({"age": 1})
+        query.sort({"age": -1})
