@@ -1,0 +1,145 @@
+ CREATE
+
+        # Create Database
+            use Database_name
+            (There is no command for create Database, it will create automatically when new collection created)
+
+        # Create collection
+            db.createCollection("collection_name")
+
+        # Show collections 
+            show collections
+
+        # Delete collection
+            db.getCollection("collection_name").drop()
+            db.collection_name.drop()
+
+        # Create document
+            * Insert one document
+                db.collection_name.insertOne(object)
+                db.collection_name.insertMany([object1, object2, object3])
+                db.collection_name.insert(object)
+
+
+    AGGREGATION
+
+        # Operators
+            $match      $group      $project        $skip
+            $sort       $count      $limit          $out
+
+        # $group
+            db.collection_name.aggregate([{$group: {_id: "$age"}}])
+            db.collection_name.aggregate([{$group: {_id: "$name", {$sum: "$price"}}}])
+            db.collection_name.aggregate([{$group: {_id:{age: "$age", place: "place"}}}])
+
+        # $match
+            aggregate([{$match: {age: {$gt: 24}}}])
+            aggregate([{$match: {$and:[
+                {gender: "female"},
+                {age: {$gt: 30 }}
+            ]}}]) 
+
+        # match and group
+            aggregate([
+                {$match: {gender: "male"},
+                {$group: {_id: {age: "$age", place: "$place"}}}
+                }
+            ])
+
+        # count stage
+             aggregate([
+                {$count: "allDocumentsCount"}
+             ])
+        # Diffrent count methods
+            Aggregate([]).toArray().length
+            (convert to array and find its length)
+            aggregate([]).itcount()
+            find({}).count()
+
+            aggregate([
+                {$match: {}},
+                {$group: {}},
+                {$count: ""}
+            ])
+
+        # sort staging
+            .aggregate([
+                {$group: {_id: {"$age"}}},
+                {$sort: {_id: 1}}
+            ])
+            (for ascending use 1 and 0 used to descending order)
+
+            .aggregate([
+                {$group: {_id:{age: "$age", place: "$place"}}},
+                {$sort: {"_id.age": 1, "_id.place": -1}}
+            ])
+
+        # Project stage
+            .aggregate([{$project: {name: 1, age: 1}}])
+            (both name and age will show, _id will be show always)
+            .aggregate([{$project: {_id: 0, name: 1, age: 1}}])
+            (_id will be excluded)
+            .aggregate([{$project: {name: 0, age: 0}}])
+            (excluded name and age)
+        
+        # Limit stage
+            choose the limit and do other aggregate operations
+            .aggregate([
+                {$limit: 100},{$match: {age: {$gt: 25}}}, {$group: {_id: "company"}}
+            ])
+
+        # unwind stage
+            Convert array elements into each single object format
+            {tags: ["first", "second", "third"]}
+            .aggragate([
+                {$unwind: "$tags"},
+                {$project: {name: 1, age: 1, tags: 1}}
+            ])
+            output will generate with each of tag elements separately.
+        
+        # unwind compained with group stage
+            .aggragate([
+                {$unwind: "$tags"},
+                {$group: {_id: "$tags"
+                }}
+            ])
+
+        ACCUMULATORS 
+        #   $sum        $avg        
+            $max        $min
+        (most accumulators are used only in the group stage, inside the group expression)
+
+        # sum
+            .aggragate([
+                {$group: {_id: "$age", count: {$sum: 1}}}
+            ])
+            .aggregate([
+                {$group: {_id: "$section", total: {$sum: "$salary"}}}
+            ])
+        # sum and unwind together
+            .aggregate([
+                {$unwind : "$tags"},
+                {$group: {_id: "$tags", count: {$sum: 1}}}
+            ])
+
+        # avg
+            .aggragate([
+                {$group: {_id: "$section", avgAge: {$avg: "$age"}}}
+            ])
+
+    Unary Operators
+        (operations takes in each document, used in project stage)
+        # type
+            (return bson file field)
+            .aggragate([
+                {$project: {name: 1, age: 1, ageType: {$type : "$age"}}}
+            ])
+
+        # out 
+            (store aggregation result as new collection)
+            .aggregate([
+                {},
+                {},
+                {$out: "outCollectionReport}
+            ])
+            db.outCollectionReport.find({}).count()
