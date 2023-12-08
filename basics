@@ -9,21 +9,121 @@ Mongodb   -    It is a open source , cross platform document database.It works o
 
 data formats used in Mongodb  -  JSON  ,  BSON(Binary JSON)  ,  EXTENDED JSON (*BSON fomrat is used to store datas in mongodb , Extended json is used to convert BSON to human readable)
 
-In mongo shell --->  mongod - Is to launch the mongosh
-                     db.version() -  To see the version of db
-                     show dbs    -  There will be 3 default dbs(admin,local,config -- DOnt use this db's for store data)
-                     use admin   -  To choose admin db(choose which ever we need
-                         -----  
+*.      connect with mongo shell
+                mongosh
 
-                     db.stats()  -  To see the status of db
+*.      Display databases
+                show dbs
 
-                     use newdb  - Before creating a collection has to be inside a db
+*.      Create databases
+                use database_name
 
-                     db.createCollection("name")  -   To create collection 
+*.      Show databases 
+                show dbs
 
-                     show collections  -  To see collections available in that db
+*.      Create a collection 
+                db.createCollection("posts")
 
-                     db.collection_name.insertOne({...enter the datas here....});  - to insert one  or we can store it in a variable and ....insertOne(variable);
-                     
-                     db.collection_name.insertMany([{...},{...},{....},etc...]);  - to insert Many  Or store this array into a variable 
+*.      show collection
+                show collections
+
+*.  Insertion
+
+*.      Insert One
+                doc = {};
+                db.collection_name.insertOne(doc)
+
+*.      Insert Many
+                doc1 = {};
+                doc2 = {};
+                db.posts.insertMany([doc1, doc2]);
+
+        FIND
+
+*       find one object
+                db.getCollection(collection_name).findOne({})
+                (collection_name in string format, {} empty query)
+
+*       find multiple objects
+                db.getCollection(collection_name).find({})
+
+
+        Query Operators
+
+*       $or     $and    $in
+        $eq     $lt     $gt
+        $ne     $nin    $regex
+
+        $gt
+        ex :    age : 23
+                age : 24
+                age : 25     find age > 24
+
+                db.getCollection(collection_name).find({
+                        age: {$gt: 24}
+                });
+
+        $and
+                db.getCollection(collection_name).find({
+                        $and: [
+                                {age: {$lt: 25}},
+                                {age: {$gt: 24}}
+                        ]
+                });
+
+        $in 
+                db.getCollection(collection_name).find({
+                        age: {
+                                $in: [
+                                        23, 24
+                                ]
+                        }
+                })
+
+*       sort(), limit(), skip()
+                db.getCollection(collection_name).find({}).limit(2) - returns 2 database_name
+                db.getCollection(collection_name).find({}).skip(2)  - skip first 2 database_name
+                db.getCollection(collection_name).find({}).sort({age: 1}) - ascending
+                db.getCollection(collection_name).find({}).sort({age: -1}) - descending
+
+*       Update
+        $set    $unset  $inc
+        $rename $currentDate    $addToSet
+
+        set age from 23 to 26
+        db.collection_name.updateOne(
+                {name: "unique name"},
+                {$set: {
+                        age: 26
+                }}
+        )
+
+        increment age 
+        db.collection_name.updateOne(
+                {name: "unique name"},
+                {$inc: {
+                        age: 1
+                }}
+        )
+
+
+*       Delete
+
+        delete a specific document
+        db.collection_name.deleteOne({
+                name: "unique name"
+        })
+        db.collection_name.deleteMany({
+                age: 18
+        })
+
+
+*       Aggregation
+
+        collect specific details of field
+        db.collection_name.aggregate([
+                {$group: {
+                        _id: "$age
+                }}
+        ])
                      
